@@ -115,10 +115,10 @@ def first_link(html):
     >>> first_link('<p>no links here</p>')  # returns None, which prints nothing
     '''
     # TODO: select 'a[href]'; return the first one's href, or None if the list is empty
-    if 'href' not in html:
-        return
     soup = BeautifulSoup(html, 'html.parser')
-    output = soup.select('a')
+    output = soup.select('a[href]')
+    if not output:
+        return None
     result = output[0]['href']
     return result
 

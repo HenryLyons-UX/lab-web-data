@@ -7,6 +7,7 @@ for year in range(2009, 2019):
     with open(filename, encoding='utf-8') as f:
         data = json.load(f)
     output.extend(data)
+print(len(output))
 tweet = output[0]
 if 'full_text' in tweet:
     message = tweet['full_text']
