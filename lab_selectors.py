@@ -13,6 +13,8 @@ def count_matches(html, selector):
     2
     '''
     # TODO: make a soup and return len(soup.select(selector))
+    soup = BeautifulSoup(html, 'html.parser')
+    return len(soup.select(selector))
 
 
 def select_texts(html, selector):
@@ -25,6 +27,13 @@ def select_texts(html, selector):
     ['a', 'b']
     '''
     # TODO: select the tags, then collect each tag's .text into a list
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    output = soup.select(selector)
+    for i in range(len(output)):
+        list1.append(output[i].text)
+    return list1   
+    
 
 
 def select_attr(html, selector, attr):
@@ -37,7 +46,12 @@ def select_attr(html, selector, attr):
     ['x.png', 'y.png']
     '''
     # TODO: select the tags, then collect each tag[attr] into a list
-
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    output = soup.select(selector)
+    for i in range(len(output)):
+        list1.append(output[i][attr])
+    return list1
 
 def extract_titles(html):
     '''
@@ -47,6 +61,11 @@ def extract_titles(html):
     ['Mouse', 'Keyboard']
     '''
     # TODO: select '.title' and return each one's .text (strip() is a good habit)
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    for link in soup.select('a.title'):
+        list1.append(link.text.strip())
+    return list1
 
 
 def extract_prices_cents(html):
@@ -60,6 +79,13 @@ def extract_prices_cents(html):
     '''
     # TODO: for each '.price', strip the '$', convert dollars to an int of cents
     # Hint: int(round(float(dollars) * 100)) turns '49.99' into 4999
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    output = soup.select('.price')
+    for i in range(len(output)):
+        centvalue = int(round(float((output[i].text).replace('$', ' '))*100))
+        list1.append(centvalue)
+    return list1
 
 
 def count_free_shipping(html):
@@ -72,6 +98,12 @@ def count_free_shipping(html):
     0
     '''
     # TODO: count the '.free-shipping' tags
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    output = soup.select('.free-shipping')
+    for i in range(len(output)):
+        list1.append(output[i])
+    return len(list1)
 
 
 def first_link(html):
@@ -83,6 +115,13 @@ def first_link(html):
     >>> first_link('<p>no links here</p>')  # returns None, which prints nothing
     '''
     # TODO: select 'a[href]'; return the first one's href, or None if the list is empty
+    if 'href' not in html:
+        return
+    soup = BeautifulSoup(html, 'html.parser')
+    output = soup.select('a')
+    result = output[0]['href']
+    return result
+
 
 
 def extract_listings(html):
@@ -97,6 +136,17 @@ def extract_listings(html):
     '''
     # TODO: loop over each '.item'; inside each, find its '.title' and '.price'
     # and build a dict with keys 'name', 'price_cents', and 'url'
+    list1 = []
+    soup = BeautifulSoup(html, 'html.parser')
+    for item in soup.select('.item'):
+        title = item.select_one('.title')
+        price = item.select_one('.price')
+        if title is None or price is None:
+            continue
+        price_text = price.text.strip().replace('$', ' ').replace(',', ' ')
+        list1.append({'name': title.text.strip(), 'price_cents': round(float(price_text)*100), 'url': title['href']})
+    return list1
+            
 
 
 if __name__ == '__main__':
